@@ -1,0 +1,30 @@
+name: Check chimpanzee BRICKS server
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'bricks/server/**'
+      - 'bricks/tests/**'
+      - 'bricks/package.json'
+      - 'bricks/web/**'
+      - '.github/workflows/bricks-ci.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        working-directory: bricks
+        run: npm install --no-audit --no-fund
+      - name: Syntax check
+        working-directory: bricks
+        run: npm run check
+      - name: Track validation smoke tests
+        working-directory: bricks
+        run: npm test
