@@ -52,6 +52,11 @@ jobs:
           CAPACITOR
           npx cap add android
           npx cap sync android
+      - name: Apply branded launcher artwork
+        shell: bash
+        run: |
+          javac pulse/android/IconMaker.java
+          java -Djava.awt.headless=true -cp pulse/android IconMaker pulse-build/android/app/src/main/res
       - name: Build debug APK
         working-directory: pulse-build/android
         run: |
