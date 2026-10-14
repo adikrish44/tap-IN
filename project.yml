@@ -1,0 +1,20 @@
+name: Chimpanzee
+options:
+  bundleIdPrefix: com.chimpanzee.radio
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: '17.0'
+    SWIFT_VERSION: '5.9'
+targets:
+  Chimpanzee:
+    type: application
+    platform: iOS
+    sources: [Chimpanzee]
+    info:
+      path: Chimpanzee/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chimpanzee.radio.app
+        TARGETED_DEVICE_FAMILY: '1'
+        GENERATE_INFOPLIST_FILE: 'NO'
+        CODE_SIGN_STYLE: Automatic
