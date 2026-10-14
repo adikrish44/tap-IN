@@ -41,6 +41,6 @@ This is a tested MVP, **not a production-certified music streaming service**. Ro
 - `server/index.js` — small Node WebSocket server, API validation and static delivery
 - `android/IconMaker.java` — local Android launcher icon generator
 - `.github/workflows/android-bricks-apk.yml` — Android 7 Capacitor build
-- `tests/station.test.js` — server integration tests
+- `tests/station.test.js` — station track validation smoke tests
 
 Created specifically for the /chimpanzee idea, without representing this app as an official LEGO product or using their brand imagery.
