@@ -1,0 +1,11 @@
+{
+  "name": "/chimpanzee",
+  "short_name": "chimpanzee",
+  "description": "Private listening app prototype",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16181d",
+  "theme_color": "#16181d",
+  "icons": []
+}
