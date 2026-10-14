@@ -1,0 +1,66 @@
+name: Build chimpanzee PULSE APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pulse/web/**'
+      - '.github/workflows/android-pulse-apk.yml'
+permissions:
+  contents: read
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Set up SDK 35 without deprecated sdkmanager tools package
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          test -x "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+      - name: Generate isolated Android app
+        shell: bash
+        run: |
+          set -euxo pipefail
+          test -f pulse/web/index.html
+          mkdir -p pulse-build/www
+          cp -a pulse/web/. pulse-build/www/
+          cd pulse-build
+          npm init -y
+          npm install --no-audit --no-fund @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
+          cat > capacitor.config.json <<'CAPACITOR'
+          {
+            "appId": "com.chimpanzee.pulse",
+            "appName": "chimpanzee PULSE",
+            "webDir": "www",
+            "android": {"allowMixedContent": false}
+          }
+          CAPACITOR
+          npx cap add android
+          npx cap sync android
+      - name: Build debug APK
+        working-directory: pulse-build/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace --no-daemon
+      - name: Upload the installable PULSE APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: chimpanzee-pulse-v2-android-apk
+          path: pulse-build/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
