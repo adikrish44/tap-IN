@@ -1,9 +1,11 @@
-name: Publish chimpanzee web app
+name: Publish chimpanzee web apps
 on:
   push:
     branches: [main]
     paths:
       - 'web/**'
+      - 'pulse/web/**'
+      - 'bricks/web/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 permissions:
@@ -21,6 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Assemble all editions without overwriting original
+        run: |
+          mkdir -p .publish/bricks .publish/pulse
+          cp -a web/. .publish/
+          cp -a bricks/web/. .publish/bricks/
+          cp -a pulse/web/. .publish/pulse/
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
@@ -28,7 +36,7 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./web
+          path: ./.publish
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
