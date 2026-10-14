@@ -1,0 +1,71 @@
+name: Build chimpanzee BRICKS Android APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'bricks/**'
+      - '.github/workflows/android-bricks-apk.yml'
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install Android SDK 35 without deprecated tools package
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          test -x "$MANAGER"
+          yes | "$MANAGER" --licenses >/dev/null || true
+          "$MANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+      - name: Prepare Android application
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p bricks/android-builder/www
+          cp -a bricks/web/. bricks/android-builder/www/
+          cd bricks/android-builder
+          npm init -y
+          npm install --no-audit --no-fund @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
+          cat > capacitor.config.json <<'CONFIG'
+          {
+            "appId": "com.chimpanzee.bricks",
+            "appName": "chimpanzee BRICKS",
+            "webDir": "www",
+            "android": {"allowMixedContent":false},
+            "server": {"androidScheme":"https"}
+          }
+          CONFIG
+          npx cap add android
+          npx cap sync android
+      - name: Apply custom launcher icon
+        shell: bash
+        run: |
+          javac bricks/android/IconMaker.java
+          java -cp bricks/android IconMaker bricks/android-builder/android/app/src/main/res
+      - name: Compile BRICKS Android APK
+        working-directory: bricks/android-builder/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: chimpanzee-bricks-android-debug-apk
+          path: bricks/android-builder/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
