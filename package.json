@@ -1,0 +1,14 @@
+{
+  "name": "chimpanzee-radio",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
