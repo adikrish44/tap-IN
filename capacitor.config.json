@@ -1,0 +1,11 @@
+{
+  "appId": "com.chimpanzee.radio",
+  "appName": "chimpanzee",
+  "webDir": "web",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
