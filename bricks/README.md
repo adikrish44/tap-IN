@@ -2,6 +2,10 @@
 
 A **separate** brick-inspired, tactile, animated edition of /chimpanzee. The earlier original app and PULSE edition are untouched. This is an independent web/PWA project and Android debug build under `bricks/`.
 
+## Device music import (Edition 03.1)
+
+Tap **Add music from device** on the first Home screen, inside a live station, or on the Queue page. The native Android picker accepts supported audio files (MP3/M4A/WAV and others); after picking files the app opens **My Crate**, where each imported song can be played offline. Files stay in this device's IndexedDB and are **not uploaded or broadcast to listeners**. The shared queue continues to support original beats and permitted HTTPS audio links.
+
 ## What it includes
 
 - Animated `/chimpanzee` brick logo, splash assembly, 3D bricks, plastic-stud controls, hover lifts, tactile press motion, rotating record and reactive Web Audio visualization.
