@@ -47,3 +47,10 @@
 @media(max-width:720px){.home-local-shelf{grid-template-columns:86px minmax(0,1fr);gap:15px;padding:18px;border-radius:18px}.local-shelf-visual{width:77px;height:77px;border-radius:17px;box-shadow:0 7px 0 #9b4244,0 15px 25px #0002}.shelf-note{font-size:40px}.shelf-stud{width:17px;height:9px;top:-4px}.stud-1{left:9px}.stud-2{left:30px}.stud-3{left:51px}.local-shelf-content h2{font-size:19px}.local-shelf-actions{gap:8px}.local-shelf-actions .brick-btn{min-height:42px;padding:10px 12px;font-size:11px}.local-shelf-track{max-width:100%}.station-import-actions{margin-top:16px}}
 @media(max-width:445px){.home-local-shelf{grid-template-columns:1fr;gap:10px}.local-shelf-visual{width:74px;height:74px}.local-shelf-actions .brick-btn{flex:1 1 auto}.hero-actions .brick-btn{flex:1 1 auto}.station-import-actions .brick-btn{width:100%}}
 @media(prefers-reduced-motion:reduce){.local-shelf-visual,.shelf-note{animation:none}.home-local-shelf:hover .local-shelf-visual{transform:none}}
+
+/* Shared station music: explicit Host upload actions, touch-friendly file rows. */
+.station-import-actions .brick-btn{min-height:44px}
+.local-file{flex-wrap:wrap}
+.local-file .brick-btn[data-action="broadcast-local"]{flex:0 0 auto;min-height:44px;padding:12px}
+.queue-local-import .brick-btn{min-height:44px}
+@media(max-width:480px){.local-file .brick-btn[data-action="broadcast-local"]{flex:1 0 100%;order:3}.station-import-actions{align-items:stretch}.station-import-actions .brick-btn{flex:1 1 100%}}

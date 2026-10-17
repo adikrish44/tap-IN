@@ -1,4 +1,4 @@
-const CACHE='chimpanzee-bricks-v2-local-import';
+const CACHE='chimpanzee-bricks-v3-station-streaming';
 const ASSETS=['./','./index.html','./styles.css','./styles-1.css','./styles-2.css','./styles-3.css','./app.js','./audio.js','./icon.svg','./manifest.webmanifest'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});

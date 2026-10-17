@@ -6,6 +6,14 @@ A **separate** brick-inspired, tactile, animated edition of /chimpanzee. The ear
 
 Tap **Add music from device** on the first Home screen, inside a live station, or on the Queue page. The native Android picker accepts supported audio files (MP3/M4A/WAV and others); after picking files the app opens **My Crate**, where each imported song can be played offline. Files stay in this device's IndexedDB and are **not uploaded or broadcast to listeners**. The shared queue continues to support original beats and permitted HTTPS audio links.
 
+## Host music streaming (Edition 03.2, experimental)
+
+With a **deployed Node/WebSocket server** (not GitHub Pages alone), the Host can tap **Upload & play for listeners** on the live station screen, or **Play for everyone** next to an imported track in **My Crate**. The selected file is temporarily uploaded over HTTPS to the station backend and added to the synchronized queue; other members retrieve it using short-lived, membership-scoped audio access tokens and HTTP byte-range playback. The Host selects playback and the server sends synchronized playback state. Every listener must tap **Enable sound** once to satisfy mobile autoplay restrictions.
+
+Limits and responsibilities: upload **only recordings you own or have permission to distribute/stream**; no YouTube ripping or unauthorized redistribution. The current MVP stores files **in process memory**, limited to **25 MB per track, 75 MB per room, 250 MB per server**, with up to 8 uploaded files per room. Files disappear when their track is removed, when the Host ends the room, or whenever the server restarts. Delivery is best-effort, dependent on device codec support, upload speeds, and network quality; there is no guaranteed sample-accurate synchronization, streaming transcoding, DRM, account-based access, encryption at rest, content licensing, or persistent storage.
+
+For a static web frontend or Android WebView, set the live server WebSocket URL in **Settings**; media requests automatically use the same host's HTTPS origin. Cross-origin media uploads default to allowed origins `https://adikrish44.github.io`, `https://localhost`, `capacitor://localhost`, and `http://localhost:3000`. Add further trusted frontend origins with the environment variable `ALLOWED_ORIGINS` (comma-separated). Serve the backend behind HTTPS/WSS in production.
+
 ## What it includes
 
 - Animated `/chimpanzee` brick logo, splash assembly, 3D bricks, plastic-stud controls, hover lifts, tactile press motion, rotating record and reactive Web Audio visualization.

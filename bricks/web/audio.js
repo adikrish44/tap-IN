@@ -52,8 +52,8 @@ export class BrickAudio {
   while(this.nextStep*stepMs-currentMs<220){const delta=this.nextStep*stepMs-currentMs,t=this.ctx.currentTime+Math.max(.006,delta/1000);if(delta>=-60)this.step(beat,this.nextStep,t);this.nextStep++}
  }
  syncAudio(track,playback,clockOffset){if(!track){if(this.audio){this.audio.pause();this.audio.src='';this.audio=null}this.playbackKey='';return}
-  if(this.playbackKey!==track.id){if(this.audio){this.audio.pause();this.audio.src=''}this.audio=new Audio(track.url);this.audio.preload='auto';this.audio.volume=this.level;this.playbackKey=track.id;this.audio.onerror=()=>this.onStatus()}
-  const target=Math.max(0,(playback.offsetMs+(Date.now()+clockOffset-playback.at))/1000);
+  if(this.playbackKey!==track.id){if(this.audio){this.audio.pause();this.audio.src=''}this.audio=new Audio(track.url);this.audio.preload='auto';this.audio.volume=this.level;this.playbackKey=track.id;this.audio.onerror=()=>this.onStatus();this.audio.onloadedmetadata=()=>{const p=this.latestPlayback;if(!p)return;const target=Math.max(0,(p.offsetMs+(Date.now()+p.clockOffset-p.at))/1000);if(Number.isFinite(this.audio?.duration)&&target<this.audio.duration)try{this.audio.currentTime=target}catch{};this.audio?.play().catch(()=>this.onStatus())}}
+  this.latestPlayback={...playback,clockOffset};const target=Math.max(0,(playback.offsetMs+(Date.now()+clockOffset-playback.at))/1000);
   if(Number.isFinite(this.audio.duration)&&target<this.audio.duration){if(Math.abs(this.audio.currentTime-target)>1.2)this.audio.currentTime=target}
   if(this.audio.paused)this.audio.play().catch(()=>this.onStatus());
  }
