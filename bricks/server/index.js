@@ -25,7 +25,7 @@ function cors(req,res) {
   res.setHeader('Access-Control-Allow-Origin',origin);
   res.setHeader('Vary','Origin');
   res.setHeader('Access-Control-Allow-Methods','GET,HEAD,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers','Authorization,Content-Type,X-Audio-Title');
+  res.setHeader('Access-Control-Allow-Headers','Authorization,Content-Type,X-Audio-Title,Range');
   return true;
 }
 function memberForToken(room,token){if(!room||!/^[0-9a-f]{48}$/.test(token||''))return null;
@@ -73,7 +73,7 @@ async function uploadMedia(req,res,roomId) {
   if(!rooms.has(roomId)||roleOf(room,member.id)!=='host')return failHttp(res,410,'Station has ended');
   if(room.mediaBytes+received>MAX_ROOM_BYTES||mediaBytes+received>MAX_GLOBAL_BYTES)return failHttp(res,507,'Media upload capacity reached');
   const assetId=crypto.randomUUID(),trackId=crypto.randomUUID();
-  const title=clean(req.headers['x-audio-title']||'Host audio',80)||'Host audio';
+  let rawTitle=String(req.headers['x-audio-title']||'Host audio');try{rawTitle=decodeURIComponent(rawTitle)}catch{}const title=clean(rawTitle,80)||'Host audio';
   mediaIndex.set(assetId,{roomId,data,type});
   mediaBytes+=data.length;room.mediaBytes+=data.length;
   room.queue.push({id:trackId,kind:'station-file',assetId,title,artist:'Music shared by host',size:data.length});
